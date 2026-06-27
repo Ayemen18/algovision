@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AlgoVision
+
+AI-powered interactive algorithm learning platform — built for coding interview mastery through visualization.
+
+## Tech Stack
+
+| Layer      | Technology                              |
+|------------|-----------------------------------------|
+| Framework  | Next.js 15 (App Router) + TypeScript    |
+| Styling    | Tailwind CSS + CSS Variables            |
+| Animation  | Framer Motion                           |
+| State      | Zustand                                 |
+| Auth       | Clerk                                   |
+| Database   | MongoDB Atlas                           |
+| AI         | OpenAI GPT-4o                           |
+| Deployment | Vercel (frontend) + Render (API)        |
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+# 1. Install dependencies
+npm install
+
+# 2. Set up environment variables
+cp .env.example .env.local
+# Fill in your keys in .env.local
+
+# 3. Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/              # Next.js App Router pages
+│   ├── layout.tsx    # Root layout (fonts, metadata, providers)
+│   ├── page.tsx      # Home page
+│   └── globals.css   # Design system CSS variables + base styles
+│
+├── components/
+│   ├── ui/           # Reusable primitives (Button, Badge, etc.)
+│   ├── layout/       # Navbar, Footer, Sidebar (Phase 2)
+│   └── providers/    # Context providers (Phase 2)
+│
+├── lib/
+│   ├── fonts.ts      # Next/font configuration
+│   ├── utils.ts      # cn() + shared utilities
+│   └── constants.ts  # App-wide constants & config
+│
+├── store/            # Zustand state slices
+└── types/            # TypeScript type definitions
+```
 
-## Learn More
+## Build Phases
 
-To learn more about Next.js, take a look at the following resources:
+| Phase | Feature                        | Status      |
+|-------|--------------------------------|-------------|
+| 1     | Project setup & architecture   | ✅ Complete |
+| 2     | Landing page & auth (Clerk)    | 🔜 Next     |
+| 3     | Problem browser (LeetCode API) | ⏳ Planned  |
+| 4     | Code editor + AI explanations  | ⏳ Planned  |
+| 5     | Algorithm visualizer           | ⏳ Planned  |
+| 6     | AI error analysis              | ⏳ Planned  |
+| 7     | Revision system & dashboard    | ⏳ Planned  |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run dev      # Development server with hot reload
+npm run build    # Production build
+npm run start    # Start production server
+npm run lint     # ESLint check
+npm run format   # Prettier format
+```
 
-## Deploy on Vercel
+## Design System
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The design system lives in `src/app/globals.css` as CSS custom properties:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Colors**: `var(--brand-primary)`, `var(--neon-green)`, `var(--surface-raised)`, etc.
+- **Fonts**: Cabinet Grotesk (display) + DM Mono (code)
+- **Utilities**: `.text-gradient`, `.glass`, `.glow-brand`, `.bg-dots`, `.bg-grid`
+
+All Tailwind config extends these tokens via `tailwind.config.ts`.
