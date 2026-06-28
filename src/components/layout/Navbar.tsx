@@ -78,7 +78,6 @@ export function Navbar() {
                       },
                     },
                   }}
-                  afterSignOutUrl="/"
                 />
               </>
             ) : (
