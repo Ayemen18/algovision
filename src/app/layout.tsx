@@ -28,8 +28,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           // Match AlgoVision's dark design system
           colorPrimary:            "#6366f1",
           colorBackground:         "#111118",
-          colorInputBackground:    "#1a1a24",
-          colorInputText:          "#f1f1f5",
           colorText:               "#f1f1f5",
           colorTextSecondary:      "#9898b0",
           colorNeutral:            "#9898b0",
