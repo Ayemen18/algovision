@@ -1,15 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { DM_Mono } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
-
-// Cabinet Grotesk via @import in globals.css (Google Fonts CDN)
-// DM Mono via next/font for performance
-const dmMono = DM_Mono({
-  subsets:  ["latin"],
-  variable: "--font-mono",
-  weight:   ["300", "400", "500"],
-  display:  "swap",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -21,24 +12,6 @@ export const metadata: Metadata = {
   },
   description:
     "Stop memorizing. Start understanding. AlgoVision visualizes algorithm execution step-by-step with AI-powered explanations, error analysis, and personalized revision.",
-  keywords: [
-    "algorithm visualization", "DSA", "leetcode", "coding interview",
-    "data structures", "AI learning", "interactive coding",
-  ],
-  openGraph: {
-    type:        "website",
-    locale:      "en_US",
-    url:         "https://algovision-alpha.vercel.app",
-    title:       "AlgoVision — AI Algorithm Learning",
-    description: "Stop memorizing. Start understanding.",
-    siteName:    "AlgoVision",
-  },
-  twitter: {
-    card:        "summary_large_image",
-    title:       "AlgoVision",
-    description: "AI-powered algorithm learning with interactive visualization.",
-  },
-  robots: { index: true, follow: true },
 };
 
 export const viewport: Viewport = {
@@ -49,10 +22,80 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={dmMono.variable} suppressHydrationWarning>
-      <body className="bg-[#0a0a0f] text-white antialiased font-display">
-        {children}
-      </body>
-    </html>
+    <ClerkProvider
+      appearance={{
+        variables: {
+          // Match AlgoVision's dark design system
+          colorPrimary:            "#6366f1",
+          colorBackground:         "#111118",
+          colorInputBackground:    "#1a1a24",
+          colorInputText:          "#f1f1f5",
+          colorText:               "#f1f1f5",
+          colorTextSecondary:      "#9898b0",
+          colorNeutral:            "#9898b0",
+          borderRadius:            "0.75rem",
+          fontFamily:              "'Cabinet Grotesk', sans-serif",
+        },
+        elements: {
+          // Card wrapper
+          card: {
+            background:   "#111118",
+            border:       "1px solid rgba(255,255,255,0.08)",
+            boxShadow:    "0 0 80px rgba(99,102,241,0.1)",
+            borderRadius: "1rem",
+          },
+          // Header
+          headerTitle: {
+            color:      "#f1f1f5",
+            fontWeight: "800",
+          },
+          headerSubtitle: { color: "#9898b0" },
+          // Social buttons (Google, GitHub)
+          socialButtonsBlockButton: {
+            background:   "#1a1a24",
+            border:       "1px solid rgba(255,255,255,0.08)",
+            color:        "#f1f1f5",
+            borderRadius: "0.75rem",
+          },
+          socialButtonsBlockButton__hover: {
+            background: "rgba(255,255,255,0.06)",
+          },
+          // Divider
+          dividerLine:  { background: "rgba(255,255,255,0.08)" },
+          dividerText:  { color: "#555570" },
+          // Form inputs
+          formFieldInput: {
+            background:   "#1a1a24",
+            border:       "1px solid rgba(255,255,255,0.08)",
+            color:        "#f1f1f5",
+            borderRadius: "0.75rem",
+          },
+          formFieldLabel:   { color: "#9898b0" },
+          formFieldHintText:{ color: "#555570" },
+          // Submit button
+          formButtonPrimary: {
+            background:   "#6366f1",
+            borderRadius: "0.75rem",
+            fontWeight:   "700",
+            boxShadow:    "0 0 20px rgba(99,102,241,0.4)",
+          },
+          // Footer links
+          footerActionLink: { color: "#818cf8" },
+          identityPreviewText:  { color: "#f1f1f5" },
+          identityPreviewEditButton: { color: "#818cf8" },
+        },
+      }}
+    >
+      <html lang="en" suppressHydrationWarning>
+        <body style={{
+          backgroundColor: "#0a0a0f",
+          color: "#f1f1f5",
+          fontFamily: "'Cabinet Grotesk', sans-serif",
+          overflowX: "hidden",
+        }}>
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
