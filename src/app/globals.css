@@ -1,123 +1,86 @@
+/* Cabinet Grotesk — display font (headings, brand) */
+@import url("https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&display=swap");
+
 @import "tailwindcss";
 @config "../../tailwind.config.ts";
 
-/* ─── CSS Design Tokens ───────────────────────────────────────────────────── */
-
+/* ─── CSS Variables ──────────────────────────────────────────────────────── */
 :root {
+  --font-display: "Cabinet Grotesk", sans-serif;
+  --font-mono:    "DM Mono", monospace;
+
   /* Surfaces */
-  --surface-base:    #0a0a0f;
-  --surface-raised:  #111118;
-  --surface-overlay: #1a1a24;
-  --surface-border:  rgba(255, 255, 255, 0.06);
-  --surface-muted:   rgba(255, 255, 255, 0.03);
+  --bg-base:     #0a0a0f;
+  --bg-raised:   #111118;
+  --bg-overlay:  #1a1a24;
 
   /* Brand */
-  --brand-primary: #6366f1;
-  --brand-light:   #818cf8;
-  --brand-dark:    #4338ca;
-  --brand-glow:    rgba(99, 102, 241, 0.35);
+  --brand:       #6366f1;
+  --brand-light: #818cf8;
+  --brand-glow:  rgba(99, 102, 241, 0.4);
 
-  /* Text */
-  --text-primary:   #f1f1f5;
-  --text-secondary: #9898b0;
-  --text-muted:     #555570;
-
-  /* Neon accents */
+  /* Neon */
   --neon-green:  #00ff88;
   --neon-blue:   #00d4ff;
-  --neon-purple: #bf5af2;
-  --neon-orange: #ff9f0a;
 
-  /* Semantic */
-  --success: #22c55e;
-  --warning: #f59e0b;
-  --error:   #ef4444;
-  --info:    #3b82f6;
-
-  /* Timing */
-  --transition-fast:   150ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-base:   250ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow:   400ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* Text */
+  --text-1: #f1f1f5;
+  --text-2: #9898b0;
+  --text-3: #555570;
 }
 
-/* ─── Base Reset ──────────────────────────────────────────────────────────── */
-
+/* ─── Base Reset ─────────────────────────────────────────────────────────── */
 @layer base {
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   html {
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
   }
 
   body {
-    background-color: var(--surface-base);
-    color: var(--text-primary);
+    background-color: var(--bg-base);
+    color: var(--text-1);
     font-family: var(--font-display);
-    line-height: 1.6;
     overflow-x: hidden;
+    line-height: 1.6;
   }
 
-  /* Selection color */
-  ::selection {
-    background: rgba(99, 102, 241, 0.3);
-    color: #f1f1f5;
-  }
+  /* Custom scrollbar */
+  ::-webkit-scrollbar       { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
 
-  /* Scrollbar styling */
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.2);
-  }
+  /* Selection */
+  ::selection { background: rgba(99,102,241,0.3); color: #f1f1f5; }
 
   /* Focus ring */
   :focus-visible {
-    outline: 2px solid var(--brand-primary);
+    outline: 2px solid #6366f1;
     outline-offset: 2px;
     border-radius: 4px;
   }
 
-  /* Headings use display font */
+  /* Typography */
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
     font-weight: 700;
     letter-spacing: -0.02em;
-    line-height: 1.2;
-    color: var(--text-primary);
+    line-height: 1.15;
+    color: var(--text-1);
   }
 
-  /* Code elements */
-  code, kbd, pre, samp {
-    font-family: var(--font-mono);
-  }
-
-  /* Links */
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
+  code, kbd, pre, samp { font-family: var(--font-mono); }
+  a { color: inherit; text-decoration: none; }
 }
 
-/* ─── Utility Components ──────────────────────────────────────────────────── */
-
+/* ─── Utility classes ─────────────────────────────────────────────────────── */
 @layer components {
+  .font-display { font-family: var(--font-display); }
+  .font-mono    { font-family: var(--font-mono); }
+
   /* Gradient text */
   .text-gradient {
     background: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #f472b6 100%);
@@ -126,116 +89,27 @@
     background-clip: text;
   }
 
-  .text-gradient-brand {
-    background: linear-gradient(135deg, var(--brand-primary) 0%, var(--neon-blue) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  /* Glass card */
+  /* Glass surface */
   .glass {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(12px);
+    background:           rgba(255,255,255,0.03);
+    backdrop-filter:      blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-  }
-
-  /* Glow effects */
-  .glow-brand {
-    box-shadow: 0 0 20px var(--brand-glow), 0 0 60px rgba(99, 102, 241, 0.15);
-  }
-
-  .glow-neon-green {
-    box-shadow: 0 0 20px rgba(0, 255, 136, 0.4), 0 0 60px rgba(0, 255, 136, 0.15);
-  }
-
-  /* Shimmer loading state */
-  .shimmer {
-    background: linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.0) 0%,
-      rgba(255, 255, 255, 0.04) 50%,
-      rgba(255, 255, 255, 0.0) 100%
-    );
-    background-size: 1000px 100%;
-    animation: shimmer 2s linear infinite;
-  }
-
-  /* Difficulty badge variants — plain CSS, no @apply (Tailwind v4 compatible) */
-  .badge-easy {
-    color: #34d399;
-    background-color: rgb(52 211 153 / 0.1);
-    border: 1px solid rgb(52 211 153 / 0.2);
-  }
-  .badge-medium {
-    color: #fbbf24;
-    background-color: rgb(251 191 36 / 0.1);
-    border: 1px solid rgb(251 191 36 / 0.2);
-  }
-  .badge-hard {
-    color: #fb7185;
-    background-color: rgb(251 113 133 / 0.1);
-    border: 1px solid rgb(251 113 133 / 0.2);
-  }
-
-  /* Grid dot background pattern */
-  .bg-dots {
-    background-image: radial-gradient(
-      circle,
-      rgba(99, 102, 241, 0.15) 1px,
-      transparent 1px
-    );
-    background-size: 24px 24px;
-  }
-
-  /* Grid line background */
-  .bg-grid {
-    background-image:
-      linear-gradient(rgba(99, 102, 241, 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(99, 102, 241, 0.05) 1px, transparent 1px);
-    background-size: 32px 32px;
+    border:               1px solid rgba(255,255,255,0.06);
   }
 }
 
-/* ─── Custom Animations ───────────────────────────────────────────────────── */
-
-@layer utilities {
-  .animate-in {
-    animation: fade-in 0.4s ease-out both;
-  }
-
-  .animation-delay-100 { animation-delay: 100ms; }
-  .animation-delay-200 { animation-delay: 200ms; }
-  .animation-delay-300 { animation-delay: 300ms; }
-  .animation-delay-400 { animation-delay: 400ms; }
-  .animation-delay-500 { animation-delay: 500ms; }
-}
-
-/* ─── Keyframes ───────────────────────────────────────────────────────────── */
-
+/* ─── Animations ─────────────────────────────────────────────────────────── */
 @keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes shimmer {
-  from { background-position: -1000px 0; }
-  to   { background-position:  1000px 0; }
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-10px); }
+  0%,100% { transform: translateY(0); }
+  50%     { transform: translateY(-10px); }
 }
 
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px var(--brand-glow); }
-  50%       { box-shadow: 0 0 40px var(--brand-glow), 0 0 80px rgba(99, 102, 241, 0.2); }
+@keyframes shimmer {
+  0%,100% { opacity: 0.4; }
+  50%     { opacity: 1;   }
 }
