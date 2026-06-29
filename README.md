@@ -59,10 +59,10 @@ src/
 | Phase | Feature                        | Status      |
 |-------|--------------------------------|-------------|
 | 1     | Project setup & architecture   | ✅ Complete |
-| 2     | Landing page & auth (Clerk)    | 🔜 Next     |
-| 3     | Problem browser (LeetCode API) | ⏳ Planned  |
-| 4     | Code editor + AI explanations  | ⏳ Planned  |
-| 5     | Algorithm visualizer           | ⏳ Planned  |
+| 2     | Landing page & auth (Clerk)    | ✅ Complete |
+| 3     | Problem browser (LeetCode API) | ✅ Complete |
+| 4     | Code editor + AI explanations  | ✅ Complete |
+| 5     | Algorithm visualizer           | 🔜 Next.    |
 | 6     | AI error analysis              | ⏳ Planned  |
 | 7     | Revision system & dashboard    | ⏳ Planned  |
 
