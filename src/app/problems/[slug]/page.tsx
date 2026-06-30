@@ -146,7 +146,7 @@ export default async function ProblemDetailPage(
                 <p style={{ fontSize: 13, color: "#9898b0", lineHeight: 1.6, marginBottom: 16 }}>
                   See the algorithm execute step-by-step with live variable tracking and AI explanations.
                 </p>
-                <Link href={`/visualize/${slug}`} style={{
+                <Link href={`/problems/${slug}/visualize`} style={{
                   display: "block", textAlign: "center",
                   padding: "10px 20px", borderRadius: 10, fontSize: 14, fontWeight: 700,
                   background: "#6366f1", color: "#fff", textDecoration: "none",
