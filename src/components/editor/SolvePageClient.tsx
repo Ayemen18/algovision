@@ -93,7 +93,7 @@ export function SolvePageClient({ problem, starterCode }: SolvePageClientProps) 
 
         {/* Right: visualize + back */}
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <a href={`/visualize/${problem.titleSlug}`} style={{
+          <a href={`/problems/${problem.titleSlug}/visualize?lang=${language}`} style={{
             padding: "6px 14px", borderRadius: 8, fontSize: 13, fontWeight: 600,
             background: "rgba(0,255,136,0.1)", border: "1px solid rgba(0,255,136,0.25)",
             color: "#00ff88", textDecoration: "none",

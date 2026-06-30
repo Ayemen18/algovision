@@ -3,6 +3,7 @@ import { fetchProblemDetail }  from "@/lib/leetcode";
 import { getCuratedTrace, isCurated } from "@/lib/algorithms";
 import { VisualizerShell }     from "@/components/visualizer/VisualizerShell";
 import type { Metadata }       from "next";
+import type { VizLanguage }    from "@/types/visualizer";
 
 export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> }
@@ -17,9 +18,16 @@ export async function generateMetadata(
 }
 
 export default async function VisualizePage(
-  { params }: { params: Promise<{ slug: string }> }
+  {
+    params,
+    searchParams,
+  }: {
+    params: Promise<{ slug: string }>;
+    searchParams: Promise<{ lang?: string }>;
+  }
 ) {
   const { slug } = await params;
+  const { lang }  = await searchParams;
 
   let problem;
   try {
@@ -33,6 +41,9 @@ export default async function VisualizePage(
   const curated = isCurated(slug);
   const curatedTrace = curated ? getCuratedTrace(slug) : null;
 
+  const validLangs: VizLanguage[] = ["python", "javascript", "typescript", "java", "cpp"];
+  const initialLanguage = validLangs.includes(lang as VizLanguage) ? (lang as VizLanguage) : undefined;
+
   return (
     <VisualizerShell
       slug={slug}
@@ -41,6 +52,7 @@ export default async function VisualizePage(
       isCuratedTrace={curated}
       curatedTrace={curatedTrace}
       problemContent={problem.content}
+      initialLanguage={initialLanguage}
     />
   );
 }
