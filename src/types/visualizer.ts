@@ -36,6 +36,51 @@ export interface VizStackState {
   frames: VizStackFrame[];
 }
 
+export interface VizTreeNode {
+  id: string;
+  val: string | number;
+  left?: VizTreeNode;
+  right?: VizTreeNode;
+  highlight?: boolean;
+}
+
+export interface VizTreeState {
+  id: string;
+  label: string;
+  root: VizTreeNode | null;
+}
+
+export interface VizGraphNode {
+  id: string;
+  val?: string | number;
+  highlight?: boolean;
+}
+
+export interface VizGraphEdge {
+  source: string;
+  target: string;
+  weight?: string | number;
+  highlight?: boolean;
+}
+
+export interface VizGraphState {
+  id: string;
+  label: string;
+  nodes: VizGraphNode[];
+  edges: VizGraphEdge[];
+  directed?: boolean;
+}
+
+export interface VizDpTableState {
+  id: string;
+  label: string;
+  rows: number;
+  cols: number;
+  data: (string | number)[][];
+  highlight?: { r: number; c: number }[];
+  success?: { r: number; c: number }[];
+}
+
 export interface VizStep {
   stepIndex:   number;
   /** line number is per-language since line counts differ across languages */
@@ -45,6 +90,9 @@ export interface VizStep {
   array?:      VizArrayState[];
   hashmap?:    VizHashMapState[];
   stack?:      VizStackState;
+  tree?:       VizTreeState[];
+  graph?:      VizGraphState[];
+  dpTable?:    VizDpTableState[];
   kind?: "normal" | "compare" | "success" | "error";
 }
 

@@ -14,33 +14,46 @@ const LANG_NAMES: Record<VizLanguage, string> = {
 
 const SYSTEM_PROMPT = `You are an expert algorithm visualizer. Given a LeetCode problem, a target language, and a reference solution, generate a step-by-step execution trace as JSON.
 
-Output ONLY valid JSON matching this exact TypeScript type, nothing else (no markdown fences, no explanation):
+Output ONLY valid JSON matching these exact TypeScript interfaces, nothing else (no markdown fences, no explanation):
 
-{
-  "code": string[],          // the solution in the REQUESTED LANGUAGE, split into individual lines
-  "steps": [
-    {
-      "stepIndex": number,
-      "line": number,         // 1-indexed line number being executed (matches code array, 1-indexed)
-      "explanation": string,  // 1-2 sentences, friendly teaching tone, explain WHY not just WHAT
-      "kind": "normal" | "compare" | "success" | "error",
-      "variables": [ { "name": string, "value": string|number, "changed": boolean } ],
-      "array": [ { "id": string, "label": string, "values": (number|string)[], "highlight": number[], "success": number[], "pointers": { [name:string]: number } } ],
-      "hashmap": [ { "id": string, "label": string, "entries": [string, number|string][], "highlightKey": string } ]
-    }
-  ],
-  "complexity": {
-    "time": string,
-    "space": string,
-    "timeExplanation": string,
-    "spaceExplanation": string
+type Trace = {
+  code: string[]; // the solution in the REQUESTED LANGUAGE, split into individual lines
+  steps: Step[];
+  complexity: {
+    time: string;
+    space: string;
+    timeExplanation: string;
+    spaceExplanation: string;
   }
-}
+};
+
+type Step = {
+  stepIndex: number;
+  line: number; // 1-indexed line number being executed
+  explanation: string; // 1-2 sentences, friendly teaching tone
+  kind: "normal" | "compare" | "success" | "error";
+  variables?: { name: string; value: string|number; changed?: boolean }[];
+  array?: { id: string; label: string; values: (number|string)[]; highlight?: number[]; success?: number[]; pointers?: Record<string, number> }[];
+  hashmap?: { id: string; label: string; entries: [string, number|string][]; highlightKey?: string }[];
+  tree?: { id: string; label: string; root: TreeNode | null }[];
+  graph?: { id: string; label: string; directed?: boolean; nodes: { id: string; val?: string|number; highlight?: boolean }[]; edges: { source: string; target: string; highlight?: boolean; weight?: string|number }[] }[];
+  dpTable?: { id: string; label: string; rows: number; cols: number; data: (string|number)[][]; highlight?: { r: number; c: number }[]; success?: { r: number; c: number }[] }[];
+  stack?: { id: string; label: string; frames: { label: string; detail?: string; active?: boolean }[] };
+};
+
+type TreeNode = {
+  id: string;
+  val: string|number;
+  left?: TreeNode;
+  right?: TreeNode;
+  highlight?: boolean;
+};
 
 Rules:
 - Write the code in the EXACT language requested, using that language's idiomatic syntax and standard library.
-- Generate 8-14 steps that tell a clear story of execution on a SMALL concrete example (3-6 elements).
-- Only include "array", "hashmap" fields if relevant to this problem — omit if not used.
+- Generate 8-14 steps that tell a clear story of execution on a SMALL concrete example (3-6 elements or nodes).
+- If a data structure (array, hashmap, tree, graph, dpTable, stack) is used in the problem, you MUST include its full state in EVERY step, even if it hasn't changed. Do not omit it in later steps.
+- For stacks, ALWAYS use the stack field, do not just put it in variables.
 - Make pointers/highlights accurate to what's actually happening at that step.
 - explanation should teach, not just narrate.
 - Mark the final successful step(s) with kind: "success".

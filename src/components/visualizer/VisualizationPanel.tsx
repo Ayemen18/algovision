@@ -5,6 +5,9 @@ import { ArrayVisual }     from "./ArrayVisual";
 import { HashMapVisual }   from "./HashMapVisual";
 import { StackVisual }     from "./StackVisual";
 import { VariablesPanel }  from "./VariablesPanel";
+import { TreeVisual }      from "./TreeVisual";
+import { GraphVisual }     from "./GraphVisual";
+import { DpTableVisual }   from "./DpTableVisual";
 
 interface VisualizationPanelProps {
   step:         VizStep;
@@ -13,7 +16,7 @@ interface VisualizationPanelProps {
 }
 
 export function VisualizationPanel({ step, totalSteps, currentIndex }: VisualizationPanelProps) {
-  const hasContent = step.array?.length || step.hashmap?.length || step.stack || step.variables?.length;
+  const hasContent = step.array?.length || step.hashmap?.length || step.stack || step.variables?.length || step.tree?.length || step.graph?.length || step.dpTable?.length;
 
   return (
     <div style={{ height: "100%", overflowY: "auto", display: "flex", flexDirection: "column" }}>
@@ -42,6 +45,10 @@ export function VisualizationPanel({ step, totalSteps, currentIndex }: Visualiza
 
         {step.array?.map(a => <ArrayVisual key={a.id} array={a} />)}
         {step.hashmap?.map(h => <HashMapVisual key={h.id} hashmap={h} />)}
+        {step.tree?.map(t => <TreeVisual key={t.id} tree={t} />)}
+        {step.graph?.map(g => <GraphVisual key={g.id} graph={g} />)}
+        {step.dpTable?.map(d => <DpTableVisual key={d.id} dpTable={d} />)}
+        
         {step.stack && <StackVisual stack={step.stack} />}
         {step.variables && <VariablesPanel variables={step.variables} />}
 

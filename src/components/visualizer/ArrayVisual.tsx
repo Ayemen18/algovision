@@ -1,9 +1,21 @@
 "use client";
 
 import type { VizArrayState } from "@/types/visualizer";
+import { motion } from "framer-motion";
 
 export function ArrayVisual({ array }: { array: VizArrayState }) {
   const pointerEntries = Object.entries(array.pointers || {});
+
+  // Layout calculations
+  const cellWidth = 54;
+  const cellHeight = 54;
+  const cellGap = 8;
+  const startX = 20;
+  const startY = 30;
+  
+  // Array width depends on values
+  const totalWidth = startX * 2 + array.values.length * (cellWidth + cellGap);
+  const totalHeight = 140 + pointerEntries.length * 28;
 
   return (
     <div>
@@ -14,71 +26,137 @@ export function ArrayVisual({ array }: { array: VizArrayState }) {
         </p>
       </div>
 
-      <div style={{ display: "flex", gap: 7, marginBottom: pointerEntries.length > 0 ? 26 : 4, position: "relative" }}>
-        {array.values.map((val, idx) => {
-          const isHighlight = array.highlight?.includes(idx);
-          const isSuccess   = array.success?.includes(idx);
+      <div style={{ position: "relative", width: "100%", overflowX: "auto" }}>
+        <svg 
+          width={Math.max(totalWidth, 500)} 
+          height={totalHeight} 
+          style={{ minWidth: totalWidth }}
+        >
+          {array.values.map((val, idx) => {
+            const isHighlight = array.highlight?.includes(idx);
+            const isSuccess   = array.success?.includes(idx);
 
-          let bg     = "rgba(255,255,255,0.025)";
-          let border = "rgba(255,255,255,0.08)";
-          let color  = "#9898b0";
-          let shadow = "inset 0 1px 0 rgba(255,255,255,0.02)";
-          let scale  = "scale(1)";
+            let bgFill = "rgba(255,255,255,0.025)";
+            let strokeColor = "rgba(255,255,255,0.08)";
+            let textColor = "#9898b0";
+            let scale = 1;
 
-          if (isSuccess) {
-            bg = "linear-gradient(145deg, rgba(0,255,136,0.18), rgba(0,255,136,0.08))";
-            border = "rgba(0,255,136,0.55)"; color = "#4ade80";
-            shadow = "0 0 18px rgba(0,255,136,0.35), inset 0 1px 0 rgba(255,255,255,0.08)";
-            scale = "scale(1.04)";
-          } else if (isHighlight) {
-            bg = "linear-gradient(145deg, rgba(99,102,241,0.22), rgba(99,102,241,0.1))";
-            border = "rgba(99,102,241,0.6)"; color = "#a5b4fc";
-            shadow = "0 0 16px rgba(99,102,241,0.35), inset 0 1px 0 rgba(255,255,255,0.08)";
-            scale = "scale(1.04)";
-          }
+            if (isSuccess) {
+              bgFill = "rgba(0,255,136,0.15)";
+              strokeColor = "rgba(0,255,136,0.55)"; 
+              textColor = "#4ade80";
+              scale = 1.05;
+            } else if (isHighlight) {
+              bgFill = "rgba(99,102,241,0.2)";
+              strokeColor = "rgba(99,102,241,0.6)"; 
+              textColor = "#a5b4fc";
+              scale = 1.05;
+            }
 
-          return (
-            <div key={idx} style={{ position: "relative", flex: 1, minWidth: 0 }}>
-              <div style={{
-                height: 54, borderRadius: 11,
-                display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-                background: bg, border: `1px solid ${border}`, boxShadow: shadow,
-                transform: scale,
-                transition: "all 0.4s cubic-bezier(0.34,1.4,0.64,1)",
-              }}>
-                <span style={{ fontFamily: "'DM Mono',monospace", fontSize: 16, fontWeight: 700, color, transition: "color 0.3s", letterSpacing: "-0.02em" }}>
+            const x = startX + idx * (cellWidth + cellGap);
+            const y = startY;
+
+            return (
+              <motion.g 
+                key={idx}
+                initial={{ opacity: 0, y: y - 10 }}
+                animate={{ opacity: 1, x, y, scale }}
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              >
+                {/* Cell Background */}
+                <motion.rect
+                  width={cellWidth}
+                  height={cellHeight}
+                  rx={10}
+                  fill={bgFill}
+                  stroke={strokeColor}
+                  strokeWidth={1}
+                />
+                
+                {/* Cell Value */}
+                <motion.text
+                  x={cellWidth / 2}
+                  y={cellHeight / 2}
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fill={textColor}
+                  fontSize={16}
+                  fontWeight="bold"
+                  fontFamily="'DM Mono', monospace"
+                >
                   {val}
-                </span>
-              </div>
-              <span style={{
-                position: "absolute", bottom: -17, left: "50%", transform: "translateX(-50%)",
-                fontSize: 10, color: "#454560", fontFamily: "'DM Mono',monospace",
-              }}>
-                {idx}
-              </span>
+                </motion.text>
 
-              {pointerEntries.filter(([, pidx]) => pidx === idx).map(([pname], pi) => (
-                <div key={pname} style={{
-                  position: "absolute", top: 62 + pi * 28, left: "50%", transform: "translateX(-50%)",
-                  display: "flex", flexDirection: "column", alignItems: "center", gap: 3,
-                  transition: "left 0.4s cubic-bezier(0.34,1.4,0.64,1), top 0.3s ease",
-                  zIndex: 5,
-                }}>
-                  <svg width="11" height="7" viewBox="0 0 12 8" fill="none">
-                    <path d="M6 0L11 7H1L6 0Z" fill="#818cf8"/>
-                  </svg>
-                  <span style={{
-                    fontFamily: "'DM Mono',monospace", fontSize: 10, fontWeight: 700, color: "#a5b4fc",
-                    background: "rgba(99,102,241,0.18)", border: "1px solid rgba(99,102,241,0.3)",
-                    padding: "2px 7px", borderRadius: 5, whiteSpace: "nowrap",
-                  }}>
-                    {pname}
-                  </span>
-                </div>
-              ))}
-            </div>
-          );
-        })}
+                {/* Cell Index */}
+                <text
+                  x={cellWidth / 2}
+                  y={cellHeight + 16}
+                  textAnchor="middle"
+                  fill="#454560"
+                  fontSize={10}
+                  fontFamily="'DM Mono', monospace"
+                >
+                  {idx}
+                </text>
+              </motion.g>
+            );
+          })}
+
+          {/* Render pointers */}
+          {pointerEntries.map(([pname, pidx], pi) => {
+            const x = startX + pidx * (cellWidth + cellGap) + cellWidth / 2;
+            const y = startY + cellHeight + 35 + pi * 25;
+            
+            return (
+              <motion.g
+                key={pname}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1, x, y }}
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              >
+                {/* Pointer Line */}
+                <path 
+                  d={`M0,-8 L0,-20`} 
+                  stroke="#818cf8" 
+                  strokeWidth={1.5}
+                  strokeDasharray="2 2"
+                />
+                
+                {/* Pointer Arrowhead */}
+                <path 
+                  d={`M-3,-20 L3,-20 L0,-25 Z`} 
+                  fill="#818cf8" 
+                />
+
+                {/* Pointer Label Background */}
+                <rect
+                  x={-12 - (pname.length * 3)}
+                  y={-5}
+                  width={24 + (pname.length * 6)}
+                  height={16}
+                  rx={4}
+                  fill="rgba(99,102,241,0.18)"
+                  stroke="rgba(99,102,241,0.3)"
+                  strokeWidth={1}
+                />
+                
+                {/* Pointer Label */}
+                <text
+                  x={0}
+                  y={5}
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fill="#a5b4fc"
+                  fontSize={10}
+                  fontWeight="bold"
+                  fontFamily="'DM Mono', monospace"
+                >
+                  {pname}
+                </text>
+              </motion.g>
+            );
+          })}
+        </svg>
       </div>
     </div>
   );
