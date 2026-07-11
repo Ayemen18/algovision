@@ -6,6 +6,8 @@ const isPublicRoute = createRouteMatcher([
   "/sign-up(.*)",       // Clerk sign-up
   "/problems",          // Problem browser — public to browse
   "/problems/(.*)",     // Individual problem pages — public
+  "/api/problems(.*)",  // Problems API — public
+  "/api/problem/(.*)",  // Single problem API — public
 ]);
 
 export default clerkMiddleware(async (auth, request) => {
